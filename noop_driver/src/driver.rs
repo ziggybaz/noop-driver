@@ -1,38 +1,43 @@
 use std::error::Error;
-use std::pin::Pin;
-use std::future::Future;
+
+
 
 #[derive(Debug)]
-enum DriverError {
+pub enum DriverError {
     NotInitialized,
     AlreadyShutDown,
 }
 
-struct Data {
+pub struct Data {
     
 }
 
 pub trait ReadOperations {
-    async fn read<'a>(&'a self) -> Pin<Box<dyn Future<Output = Result<Data, DriverError>> + Send + 'a>>;
+    async fn read(& self) -> Result<Data, DriverError>;
 }
 
 pub trait WriteOperations {
-    async fn write<'a>(&'a self, data:Data) -> Pin<Box<dyn Future<Output = Result<(), DriverError>> + Send + 'a>>;
+    async fn write(& self, data:Data) -> Result<(), DriverError>;
 }
 
 pub struct DriverRead;
 
 impl ReadOperations for DriverRead {
-    async fn read<'a>(&'a self) -> Pin<Box<dyn Future<Output = Result<Data, DriverError>> + Send + 'a>>{
-        Box::pin(async {Ok(Data {})})
+   async fn read(& self) -> Result<Data, DriverError>{
+
+        Ok(Data {})
+
+
     }
 }
 
 pub struct DriverWrite;
 
 impl WriteOperations for DriverWrite {
-    async fn write<'a>(&'a self,_data:Data) -> Pin<Box<dyn Future<Output = Result<(), DriverError>> + Send + 'a>> {
-        Box::Pin(async { Ok(() ) })
+    async fn write(& self,_data:Data) -> Result<(), DriverError> {
+
+        Ok(())
+
     }
 }
 
