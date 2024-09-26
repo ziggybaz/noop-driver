@@ -63,6 +63,20 @@ impl DriverProcesses {
         self.shut_down = true;
         Ok(())
     }
+
+    async fn read(&self) -> Resilt<Data, DriverError> {
+        if !self.initialized{ return Err(DriverError::NotInitialized); }
+        if self.shutdown{ return Err(DriverError::AlreadyShutDown); }
+
+        self.read_process.read().await
+    }
+
+    async fn write(&self, _data:Data) -> Result<(), DriverError> {
+        if !self.initialized{ return Err(DriverError::NotInitialized); }
+        if self.shutdown{ return Err(DriverError::AlreadyShutDown); } 
+
+        self.write_process.write().await
+    }
 }
 
 
