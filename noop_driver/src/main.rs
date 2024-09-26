@@ -1,9 +1,14 @@
+mod driver;
+
+
+use crate::driver::{DriverRead, DriverWrite, DriverProcesses};
+
 #[tokio::main]
 async fn main() {
-    let read_process = Box::new(ReadOperations);
-    let write_process = Box::new(WriteOperations);
+    let read_process = Box::new(DriverRead);
+    let write_process = Box::new(DriverWrite);
 
-    let mut driver = DriverProcess::new(read_process, write_process);
+    let mut driver = DriverProcesses::new(read_process, write_process);
 
     driver.init().await.unwrap();
 

@@ -1,8 +1,8 @@
 use std::error::Error;
 
-[derive(Debug)]
+#[derive(Debug)]
 enum DriverError {
-    NotINitialized,
+    NotInitialized,
     AlreadyShutDown,
 }
 
@@ -34,10 +34,10 @@ impl WriteOperations for DriverWrite {
 }
 
 pub struct DriverProcesses {
-    initialized: bool,
-    shut_down: bool,
-    read: Box<dyn ReadOperations>,
-    write: Box<dyn WriteOperations>,
+    pub initialized: bool,
+    pub shut_down: bool,
+    pub read_process: Box<dyn ReadOperations>,
+    pub write_process: Box<dyn WriteOperations>,
 }
 
 impl DriverProcesses {
@@ -50,12 +50,12 @@ impl DriverProcesses {
         }
     }
 
-    async fn init(&mut self) -> Result<(), DriverError>{
+    pub async fn init(&mut self) -> Result<(), DriverError>{
         self.initialized = true;
         Ok(())
     }
 
-    async fn shutdown(&mut self) -> Result<(), DriverError>{
+    pub async fn shutdown(&mut self) -> Result<(), DriverError>{
         if self.shut_down{
             return Err(DriverError::AlreadyShutDown)
         }
@@ -64,18 +64,18 @@ impl DriverProcesses {
         Ok(())
     }
 
-    async fn read(&self) -> Resilt<Data, DriverError> {
+    pub async fn read(&self) -> Result<Data, DriverError> {
         if !self.initialized{ return Err(DriverError::NotInitialized); }
-        if self.shutdown{ return Err(DriverError::AlreadyShutDown); }
+        if self.shut_down{ return Err(DriverError::AlreadyShutDown); }
 
         self.read_process.read().await
     }
 
-    async fn write(&self, _data:Data) -> Result<(), DriverError> {
+    pub async fn write(&self, _data:Data) -> Result<(), DriverError> {
         if !self.initialized{ return Err(DriverError::NotInitialized); }
-        if self.shutdown{ return Err(DriverError::AlreadyShutDown); } 
+        if self.shut_down{ return Err(DriverError::AlreadyShutDown); } 
 
-        self.write_process.write().await
+        self.write_process.write(data).await
     }
 }
 
