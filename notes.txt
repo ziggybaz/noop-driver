@@ -55,7 +55,7 @@ simulate errors: try to replicate failure outcomes such as memory constraints an
         ______________________
 
 
-
+Note: I'll also have to simulate interrupts.
 
 
 
