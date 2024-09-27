@@ -41,3 +41,15 @@ async fn graceful_shutdown<R, W>(mut driver: DriverProcesses<R, W>)
         }
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_graceful_shutdown() {
+    }
+}
+
+

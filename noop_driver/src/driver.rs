@@ -1,6 +1,3 @@
-
-
-
 #[derive(Debug)]
 pub enum DriverError {
     NotInitialized,
@@ -80,7 +77,14 @@ impl<R:ReadOperations, W:WriteOperations> DriverProcesses<R,W> {
 }
 
 
+#[cfg(test)]
+mod tests {
+    use super::*;
 
+    #[test]
+    //before writing tests, sort out what the noop does otherwise tests won't really be for
+    //anything
+}
 
 
 
