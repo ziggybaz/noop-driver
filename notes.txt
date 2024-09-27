@@ -1,0 +1,76 @@
+            NO-OP DRIVER.
+    High-Level Goals
+-picking up how driver interfaces (expose operations and interact with other system components).
+-implement robust error-handling in mission critical systems.
+-concurrency
+-testing and extensibility(don't know why I grouped these together, they don't have any relationship)
+
+        No-op Driver Design.
+    1.Driver structure & interface.
+interface: should adhere to a trsit representing the operations typically performed by a driver i.e( init, shutdown/cleanup, read, write, status -> the most basic ops)
+    2.Simulating a realistic driver.
+2.1.initialization and state management.
+track initialization state: ensure the driver can't perform operations unless initialized, uhm duhh!!
+internal state tracking: manage counters like read/write ops as well as active/inactive status.
+
+2.2.I/O ops.
+supposrt async mode.
+*handle different buffer sizes???
+test limits (out-of-bounds access)
+
+2.3.Error-handling.
+graceful recovery.
+simulate errors: try to replicate failure outcomes such as memory constraints and if i decide to make it concurrent, data races & deadlocks(can i really!).
+
+2.4.Resource management.
+
+        Feature Flow.
+    Phase1:Initialization & simple ops.
+-implement basic driver interface (init, read, write, shutdown)
+
+    Phase2:Error-handlling & concurrency
+-add error-handling for uninitialized operations and simulate random failures.
+-introduce thread safety and write tests checking for data races and deadlocks**
+
+    Phase3:Resource Management
+-try to simulate memory usage and handling resource exhaustion.
+
+
+
+    Diagram Flow.
+        ______________________
+        |Initialization & Ops|
+        ______________________
+                  |
+        _______________________
+        |Error-handling & Conc|
+        _______________________
+                  |
+        _______________________
+        |Resource Management  |
+        _______________________
+                  |
+        ______________________
+        |Extensibility       |
+        ______________________
+
+
+Note: I'll also have to simulate interrupts.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
