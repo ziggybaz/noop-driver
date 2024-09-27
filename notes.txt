@@ -59,8 +59,35 @@ Note: I'll also have to simulate interrupts.
 
 
 
+    Fuck Ups.
+  Phase1
+Fairly straightfoward, since design wasn't a problem just ended up declaring loads of empty structs and definig loads of traits.
+Due to the lack of complexity involved here, I tried being too clever and wueh compiler ilinichapa.
 
+this is what I had written initially and to be honest I don't think I know what I was writing:
 
+` fn new(read_process: Box<dyn ReadOperations>, write_process: Box<dyn WriteOperations>) -> Self {
+        DriverProcesses {
+            initialized: false,
+            shut_down: false,
+            read_process,
+            write_process,
+        }
+    }`
+
+compiler error message I got:
+
+` pub write_process: Box<dyn WriteOperations>,
+   |                            ^^^^^^^^^^^^^^^^^^^ WriteOperations cannot be made into an object
+   |
+note: for a trait to be "object safe" it needs to allow building a vtable to allow the call to be resolvable dynamically; for more information visit <https://doc.rust-lang.org/reference/items/traits.html#object-safety>`
+
+after firmly being humbled by the compiler and not willing to put up a fight to find a workaround I reverted it to a much simpler implementation using generic types.
+i've written this so that when I'm bored I might just reimplement it in this order and fuck around till i make it work.
+
+  Phase2.
+robustness is key and to honest I think it can be more robust.
+wrote like 3 different implementations but none of them made me happy including the final draft, will probably need to spend more time tinkering with `std::error::Error`.
 
 
 
