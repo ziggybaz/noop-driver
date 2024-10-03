@@ -1,13 +1,13 @@
             NO-OP DRIVER.
     High-Level Goals
--picking up how driver interfaces (expose operations and interact with other system components).
+-picking up how driver interfaces work i.e:(expose operations and interact with other system components).
 -implement robust error-handling in mission critical systems.
--concurrency
+-concurrency(dependant on what my driver will do, but by its definition its not supposed to do anything)
 -testing and extensibility(don't know why I grouped these together, they don't have any relationship)
 
         No-op Driver Design.
     1.Driver structure & interface.
-interface: should adhere to a trsit representing the operations typically performed by a driver i.e( init, shutdown/cleanup, read, write, status -> the most basic ops)
+interface: should adhere to a trait representing the operations typically performed by a driver i.e( initialization, shutdown/cleanup, read, write, status -> the most basic ops)
     2.Simulating a realistic driver.
 2.1.initialization and state management.
 track initialization state: ensure the driver can't perform operations unless initialized, uhm duhh!!
@@ -82,15 +82,16 @@ compiler error message I got:
    |
 note: for a trait to be "object safe" it needs to allow building a vtable to allow the call to be resolvable dynamically; for more information visit <https://doc.rust-lang.org/reference/items/traits.html#object-safety>`
 
-after firmly being humbled by the compiler and not willing to put up a fight to find a workaround I reverted it to a much simpler implementation using generic types.
+after firmly being humbled by the compiler and not willing to put up a fight to find a workaround I reverted to a much simpler implementation using generic types.
 i've written this so that when I'm bored I might just reimplement it in this order and fuck around till i make it work.
 
   Phase2.
-robustness is key and to honest I think it can be more robust.
+robustness is key and to be honest I think it can be more robust.
 wrote like 3 different implementations but none of them made me happy including the final draft, will probably need to spend more time tinkering with `std::error::Error`.
 
-
-
+  Phase3.
+deciding on what the driver ought to do.
+went with reading && writing to Buffer. chose this since i would be able to simulate a lot of scenarios such as (buffer overflow, ou-of-bounds-access and etc as I remember more)
 
 
 

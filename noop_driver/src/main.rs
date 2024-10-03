@@ -1,12 +1,12 @@
 mod driver;
 
-use crate::driver::{DriverRead, DriverWrite, DriverProcesses, ReadOperations, WriteOperations};
+use crate::driver::{BufferSimulator, DriverProcesses, ReadOperations, WriteOperations};
 use std::process;
 
 #[tokio::main]
 async fn main() {
-    let read_process = DriverRead;
-    let write_process = DriverWrite;
+    let read_process = BufferSimulator::new(1024);
+    let write_process = BufferSimulator::new(1024);
 
     let mut driver = DriverProcesses::new(read_process, write_process);
 
@@ -16,8 +16,9 @@ async fn main() {
         process::exit(1);
     }
 
-    let data = driver.read().await.unwrap();
-    driver.write(data).await.unwrap();
+    let _data = driver.read(0, 10).await.expect("Unable to read from buffer, sorting it out");
+
+    //driver.write(0, data).await.expect("Unable to write to buffer mse.");
     
     if let Err(e) = driver.shutdown().await {
         eprintln!("Error shutting down the driver, kindly wait for the system to terminate gracefully bruv:\n{:?}", e);
@@ -35,21 +36,22 @@ async fn graceful_shutdown<R, W>(mut driver: DriverProcesses<R, W>)
 {
     if !driver.shut_down {
         if let Err(_e) = driver.shutdown().await {
-            eprintln!("Bruv, there was an error during shutdown, we are trying to handle it, stay calm");
+            eprintln!("Bruv, there was an error during shutdown, I'm trying to handle it, stay calm");
         } else {
-            println!("System sorted out, driver succesfully shutdown");
+            println!("System sorted, driver has succesfully shutdown");
         }
     }
 }
 
-
+/*
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test_graceful_shutdown() {
+        unimplemented!()
     }
 }
-
+**/
 
