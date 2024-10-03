@@ -92,8 +92,13 @@ wrote like 3 different implementations but none of them made me happy including 
   Phase3.
 deciding on what the driver ought to do.
 went with reading && writing to Buffer. chose this since i would be able to simulate a lot of scenarios such as (buffer overflow, ou-of-bounds-access and etc as I remember more)
+wrote a piece of code where the implementation block for the buffersimulator contained the traits and the struct constructor(new), the code did NOT compile. Turns out constructors shouldn't be part of trait
+implementations but instead part of the structure itself. this was actually a good find, because for every trait implementation block, i had the same constructor in every one making it horrible to read.
 
-
+just because I can, decided to make the driver platform specific i.e runs only on(x86_64 linux archs): {
+by default when you run `cargo build` it will only build for your host arch if its the above arch if not it will give you a compilation error.
+e.g `cargo build --target x8_64-pc-windows-gnu` will not compile. 
+}
 
 
 

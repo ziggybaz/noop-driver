@@ -1,3 +1,8 @@
+#![cfg(all(target_os = "linux", target_arch = "x86_64", feature = "x86_64_linux"))]
+
+#[cfg(not(all(target_os = "linux", target_arch = "x86_64", feature = "x86_64_linux")))]
+compile_error!("this useless driver only runs linux on x86_64 archs.");
+
 mod driver;
 
 use crate::driver::{BufferSimulator, DriverProcesses, ReadOperations, WriteOperations};
@@ -12,7 +17,7 @@ async fn main() {
 
     if let Err(e) = driver.init().await {
         eprintln!("Failed to initialize the driver bruv:\n{:?}", e);
-        graceful_shutdown(driver).await;
+        graceful_shutdown(&mut driver).await;
         process::exit(1);
     }
 
@@ -29,7 +34,7 @@ async fn main() {
     process::exit(0);
 }
 
-async fn graceful_shutdown<R, W>(mut driver: DriverProcesses<R, W>)
+async fn graceful_shutdown<R, W>(driver: &mut DriverProcesses<R, W>)
     where
     R:ReadOperations,
     W:WriteOperations,
@@ -43,15 +48,24 @@ async fn graceful_shutdown<R, W>(mut driver: DriverProcesses<R, W>)
     }
 }
 
-/*
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use tokio;
 
-    #[test]
-    fn test_graceful_shutdown() {
-        unimplemented!()
+    #[tokio::test]
+    async fn test_graceful_shutdown() {
+        let read_process = BufferSimulator::new(1024);
+        let write_process = BufferSimulator::new(1024);
+
+        let mut driver = DriverProcesses::new(read_process, write_process);
+
+        assert!(!driver.shut_down);
+
+        graceful_shutdown(&mut driver).await;
+
+        assert!(driver.shut_down);
     }
 }
-**/
 
