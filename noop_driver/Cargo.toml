@@ -5,3 +5,7 @@ edition = "2021"
 
 [dependencies]
 tokio = { version = "1", features = ["full"] }
+
+[features]
+default = []
+x86_64_linux = []

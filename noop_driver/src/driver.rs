@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum DriverError {
     NotInitialized,
     AlreadyShutDown,
@@ -95,28 +95,44 @@ impl<R:ReadOperations, W:WriteOperations> DriverProcesses<R,W> {
     }
 }
 
-/*
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use tokio;
 
-    #[test]
-    //before writing tests, sort out what the noop does otherwise tests won't really be for
-    //anything
+    #[tokio::test]
+    async fn test_read() {
+        let mut simulate_buffer = BufferSimulator::new(1024);
+        let data = [1, 2, 3, 4, 5, 6];
+        let offset = 0;
+
+        simulate_buffer.write(offset,&data).await.expect(" unable to write to buffer ");
+
+        let read_result = simulate_buffer.read(offset, data.len()).await;
+
+        assert!(read_result.is_ok());
+        assert_eq!(read_result.expect(" failed to read result "), data);
+    }
+
+    #[tokio::test]
+    async fn test_read_outofbounds() {
+        let simulate_buffer = BufferSimulator::new(1024);
+        let offset = 0;
+        let length = 2000;
+
+        let result = simulate_buffer.read(offset, length).await;
+
+        assert!(result.is_err());
+        assert_eq!(result.err().expect(" could not read result"), DriverError::OutOfBounds(" out of bounds ".to_string()))
+    }
+
+    #[tokio::test]
+    async fn test_write() { unimplemented!() }
+
+    #[tokio::test]
+    async fn test_write_buffer_overflow() { unimplemented!() }
+
+    #[tokio::test]
+    async fn test_writeoutofbounds() { unimplemented!() }
 }
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
